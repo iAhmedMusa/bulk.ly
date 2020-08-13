@@ -184,5 +184,22 @@ class PagesController extends Controller
         return view('auth.friday');
     }
 
+    public function history()
+    {
+        $buffer = BufferPosting::with('groupInfo','accountInfo')->orderBy('id', 'DESC')->paginate(10);
+        return view('pages.history')->with('buffer', $buffer);
+    }
+
+    // public function groupName(){
+    //     $groups = SocialPostGroups::get();
+    //     return view('pages.history')->with('groups', $groups);
+    // }
+
+    public function search( Request $request ) {
+        $search = $request->search;
+        $buffer = BufferPosting::with('groupInfo','accountInfo')->where( 'name', 'like', '%' . $search . '%' )->paginate( 10 )->appends( 'search', $search );
+        return view( 'pages.history' )->with( 'buffer', $buffer );
+    }
+
 
 }
